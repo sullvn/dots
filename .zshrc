@@ -2,6 +2,9 @@ source ~/.antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
+antigen bundle mafredri/zsh-async
+antigen bundle sindresorhus/pure
+
 antigen bundle bower
 antigen bundle brew
 antigen bundle bundler
@@ -20,11 +23,9 @@ antigen bundle tmux
 antigen bundle vi-mode
 antigen bundle web-search
 
-antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-completions src
 antigen bundle zsh-users/zsh-history-substring-search
-
-antigen bundle mafredri/zsh-async
-antigen bundle sindresorhus/pure
+antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen apply
 
@@ -38,7 +39,3 @@ export GCLOUD_BIN=/opt/homebrew-cask/Caskroom/google-cloud-sdk/latest/google-clo
 
 export GOPATH=~/.go
 export PATH=$PATH:~/.bin:$GCLOUD_BIN:$GOPATH/bin
-
-cd() { 
-    builtin cd "$@" && ls
-}

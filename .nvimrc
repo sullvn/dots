@@ -70,8 +70,8 @@ set autoindent
 filetype plugin indent on
 
 " Tabs and indentation
-set tabstop=4     " visual width of tab character
-set shiftwidth=4  " automatic indentation and '>>' shortcut
+set tabstop=2     " visual width of tab character
+set shiftwidth=2  " automatic indentation and '>>' shortcut
 " set softtabstop=tabstop (by default) " amount of spaces to use in expanded tabs
 
 set expandtab     " use spaces instead of tabs

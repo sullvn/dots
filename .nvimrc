@@ -1,4 +1,4 @@
-call plug#begin('~/.nvim/plugins')
+call plug#begin('~/.config/nvim/plugins')
 
 " Plugins - Files
 Plug 'scrooloose/nerdtree'
@@ -103,8 +103,8 @@ set hlsearch
 
 " Store backups in ~/.vim
 set backup
-set backupdir=~/.nvim/backup
-set directory=~/.nvim/tmp
+set backupdir=~/.config/nvim/backup
+set directory=~/.config/nvim/tmp
 
 " Enter directory of file
 set autochdir

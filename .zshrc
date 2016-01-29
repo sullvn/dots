@@ -1,4 +1,5 @@
 source ~/.antigen/antigen/antigen.zsh
+[ -f ~/.keys.zsh ] && source ~/.keys.zsh
 
 antigen use oh-my-zsh
 

@@ -39,4 +39,4 @@ export EDITOR="$VISUAL"
 export GCLOUD_BIN=/opt/homebrew-cask/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/
 
 export GOPATH=~/.go
-export PATH=$PATH:~/.bin:$GCLOUD_BIN:$GOPATH/bin
+export PATH=$PATH:~/.local/bin:$GCLOUD_BIN:$GOPATH/bin

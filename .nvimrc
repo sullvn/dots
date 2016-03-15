@@ -24,6 +24,9 @@ Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-surround'
 
+" Plugins - Misc
+Plug 'tpope/vim-dispatch'
+
 " Plugins - Git
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -36,6 +39,11 @@ Plug 'scrooloose/syntastic'
 let g:syntastic_javascript_checkers = ['eslint']
 
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
+Plug 'kien/rainbow_parentheses.vim'
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 " Plugins - Javascript
 Plug 'pangloss/vim-javascript'
@@ -44,10 +52,20 @@ let g:jsx_ext_required = 0
 
 " Plugins - Purescript
 Plug 'raichoo/purescript-vim'
+Plug 'frigoeu/psc-ide-vim'
+au FileType purescript nmap <leader>t :PSCIDEtype<CR>
+au FileType purescript nmap <leader>s :PSCIDEapplySuggestion<CR>
+au FileType purescript nmap <leader>p :PSCIDEpursuit<CR>
+au FileType purescript nmap <leader>c :PSCIDEcaseSplit<CR>
 
 " Plugins - Markdown
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+
+" Plugins - Clojure
+Plug 'guns/vim-clojure-static'
+Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-salve'
 
 call plug#end()
 

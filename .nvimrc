@@ -13,6 +13,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 set laststatus=2
 let g:airline_powerline_fonts=1
+let g:airline_theme='base16'
 
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -69,6 +70,13 @@ Plug 'tpope/vim-salve'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
+" Plugins - Python
+Plug 'nvie/vim-flake8'
+let python_highlight_all=1
+let g:jedi#show_call_signatures = 2
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#show_call_signatures_delay = 0
+
 call plug#end()
 
 " Colors
@@ -122,7 +130,7 @@ set smartcase
 set incsearch
 set hlsearch
 
-" Store backups in ~/.vim
+" Store backups in ~/.config/nvim
 set backup
 set backupdir=~/.config/nvim/backup
 set directory=~/.config/nvim/tmp

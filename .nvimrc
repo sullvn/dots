@@ -35,17 +35,6 @@ Plug 'tpope/vim-fugitive'
 " Plugins - Theme
 Plug 'chriskempson/base16-vim'
 
-" Plugins - Syntax
-Plug 'scrooloose/syntastic'
-let g:syntastic_javascript_checkers = ['eslint']
-
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
-Plug 'kien/rainbow_parentheses.vim'
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
-
 " Plugins - Javascript
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
@@ -76,6 +65,12 @@ let python_highlight_all=1
 let g:jedi#show_call_signatures = 2
 let g:jedi#auto_vim_configuration = 0
 let g:jedi#show_call_signatures_delay = 0
+
+" Plugins - Syntax
+Plug 'scrooloose/syntastic'
+
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
+Plug 'eapache/rainbow_parentheses.vim'
 
 call plug#end()
 
@@ -137,3 +132,30 @@ set directory=~/.config/nvim/tmp
 
 " Enter directory of file
 set autochdir
+
+" Plugin - Syntastic
+let g:syntastic_javascript_checkers = ['eslint']
+
+" Plugin - RainbowParenthesis
+let g:bold_parentheses = 0
+let g:rbpt_colorpairs = [
+    \ ['red',         'RoyalBlue3'],
+    \ ['brown',       'SeaGreen3'],
+    \ ['darkblue',    'DarkOrchid3'],
+    \ ['gray',        'firebrick3'],
+    \ ['magenta',     'SeaGreen3'],
+    \ ['cyan',        'DarkOrchid3'],
+    \ ['darkred',     'firebrick3'],
+    \ ['brown',       'RoyalBlue3'],
+    \ ['darkblue',    'DarkOrchid3'],
+    \ ['gray',        'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkmagenta', 'SeaGreen3'],
+    \ ['darkcyan',    'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces

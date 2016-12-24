@@ -69,7 +69,7 @@ let g:jedi#show_call_signatures_delay = 0
 " Plugins - Syntax
 Plug 'scrooloose/syntastic'
 
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --racer-completer --tern-completer --clang-completer --gocode-completer' }
 Plug 'eapache/rainbow_parentheses.vim'
 
 call plug#end()

@@ -17,6 +17,20 @@ in
     san-francisco-mono
   ];
 
+  networking.hostName = "sullvn";
+  # CloudFlare
+  networking.dns = [
+    "1.1.1.1"
+    "1.0.0.1"
+    "2606:4700:4700::1111"
+    "2606:4700:4700::1001"
+  ];
+  networking.knownNetworkServices = [
+    "Wi-Fi"
+    "Bluetooth PAN"
+    "Thunderbolt Bridge"
+  ];
+
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";

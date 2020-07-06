@@ -5,6 +5,7 @@ let
   vscode-with-extensions = pkgs.vscode-with-extensions.override {
     vscodeExtensions = (with pkgs.vscode-extensions; [
       ms-vscode-remote.remote-ssh
+      vscodevim.vim
     ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       {
         name = "mayukaithemevsc";
@@ -17,6 +18,18 @@ let
         publisher = "miguelsolorio";
         version = "1.4.5";
         sha256 = "0i0bdcnkqr9jsb137y8vs93z508dlydzfd06byl1j3bsc7l5yilr";
+      }
+      {
+        name = "nix";
+        publisher = "bbenoist";
+        version = "1.0.1";
+        sha256 = "0zd0n9f5z1f0ckzfjr38xw2zzmcxg1gjrava7yahg5cvdcw6l35b";
+      }
+      {
+        name = "nix-env-selector";
+        publisher = "arrterian";
+        version = "0.1.2";
+        sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
       }
     ];
   };

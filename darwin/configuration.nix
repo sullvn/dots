@@ -2,6 +2,16 @@
 
 let
   san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix { };
+  vscode-with-extensions = pkgs.vscode-with-extensions.override {
+    vscodeExtensions = (with pkgs.vscode-extensions; [
+      ms-vscode-remote.remote-ssh
+    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+      name = "mayukaithemevsc";
+      publisher = "GulajavaMinistudio";
+      version = "1.5.1";
+      sha256 = "13pagsv3dnfp8bmnbwaz1vf7lq345lx9956vznkacbdjrnsbngnh";
+    }];
+  };
 in
 {
   imports = [ <home-manager/nix-darwin> ];
@@ -57,11 +67,12 @@ in
   environment.shells = [ pkgs.fish ];
   home-manager.useUserPackages = true;
   home-manager.users.kevin = { pkgs, ... }: {
-    home.packages = with pkgs; [
+    home.packages = (with pkgs; [
       tmux
       git
       neovim
       starship
+    ]) ++ [
       vscode-with-extensions
     ];
     nixpkgs.config.allowUnfree = true;

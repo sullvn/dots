@@ -5,12 +5,20 @@ let
   vscode-with-extensions = pkgs.vscode-with-extensions.override {
     vscodeExtensions = (with pkgs.vscode-extensions; [
       ms-vscode-remote.remote-ssh
-    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
-      name = "mayukaithemevsc";
-      publisher = "GulajavaMinistudio";
-      version = "1.5.1";
-      sha256 = "13pagsv3dnfp8bmnbwaz1vf7lq345lx9956vznkacbdjrnsbngnh";
-    }];
+    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+      {
+        name = "mayukaithemevsc";
+        publisher = "GulajavaMinistudio";
+        version = "1.5.1";
+        sha256 = "13pagsv3dnfp8bmnbwaz1vf7lq345lx9956vznkacbdjrnsbngnh";
+      }
+      {
+        name = "min-theme";
+        publisher = "miguelsolorio";
+        version = "1.4.5";
+        sha256 = "0i0bdcnkqr9jsb137y8vs93z508dlydzfd06byl1j3bsc7l5yilr";
+      }
+    ];
   };
 in
 {

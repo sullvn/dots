@@ -17,6 +17,8 @@ in
   imports = [ <home-manager/nix-darwin> ];
 
   nixpkgs.config.allowUnfree = true;
+  nix.package = pkgs.nix;
+
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget

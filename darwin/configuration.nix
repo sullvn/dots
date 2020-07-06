@@ -12,6 +12,7 @@ let
       sha256 = "13pagsv3dnfp8bmnbwaz1vf7lq345lx9956vznkacbdjrnsbngnh";
     }];
   };
+  firefox = pkgs.callPackage ./firefox.nix { };
 in
 {
   imports = [ <home-manager/nix-darwin> ];
@@ -74,10 +75,15 @@ in
       starship
     ]) ++ [
       vscode-with-extensions
+      firefox
     ];
     nixpkgs.config.allowUnfree = true;
 
     programs.home-manager.enable = true;
+    # programs.firefox = {
+    #  enable = true;
+    #  package = firefox;
+    #};
     programs.fish = {
       enable = true;
       promptInit = "starship init fish | source";

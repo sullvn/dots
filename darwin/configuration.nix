@@ -95,6 +95,7 @@ in
       git
       neovim
       starship
+      weechat
     ]) ++ [
       vscode-with-extensions
     ];

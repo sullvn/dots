@@ -9,10 +9,11 @@ in
   nixpkgs.config.allowUnfree = true;
   nix.package = pkgs.nix;
 
-
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = [];
+  environment.systemPackages = with pkgs; [
+    # Show in ~/Applications
+    alacritty
+    vscode
+  ];
 
   fonts.enableFontDir = true;
   fonts.fonts = [
@@ -55,6 +56,12 @@ in
   system.keyboard.remapCapsLockToEscape = true;
 
   system.defaults.trackpad.Clicking = true;
+
+  launchd.user.agents.bill-tunnel = {
+    command = "ssh bill-tunnel";
+    serviceConfig.KeepAlive = true;
+    serviceConfig.ProcessType = "Background";
+  };
 
   # Required afterwards:
   # $ chsh -s /run/current-system/sw/bin/fish
@@ -264,7 +271,7 @@ in
       shift + cmd + alt - l : yabai -m window --close
 
       # Terminal
-      alt - space : alacritty
+      alt - space : open --new ~/Applications/Alacritty.app
     ";
   };
 

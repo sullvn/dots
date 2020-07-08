@@ -1,38 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix { };
-  vscode-with-extensions = pkgs.vscode-with-extensions.override {
-    vscodeExtensions = (with pkgs.vscode-extensions; [
-      ms-vscode-remote.remote-ssh
-      vscodevim.vim
-    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      {
-        name = "mayukaithemevsc";
-        publisher = "GulajavaMinistudio";
-        version = "1.5.1";
-        sha256 = "13pagsv3dnfp8bmnbwaz1vf7lq345lx9956vznkacbdjrnsbngnh";
-      }
-      {
-        name = "min-theme";
-        publisher = "miguelsolorio";
-        version = "1.4.5";
-        sha256 = "0i0bdcnkqr9jsb137y8vs93z508dlydzfd06byl1j3bsc7l5yilr";
-      }
-      {
-        name = "nix";
-        publisher = "bbenoist";
-        version = "1.0.1";
-        sha256 = "0zd0n9f5z1f0ckzfjr38xw2zzmcxg1gjrava7yahg5cvdcw6l35b";
-      }
-      {
-        name = "nix-env-selector";
-        publisher = "arrterian";
-        version = "0.1.2";
-        sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
-      }
-    ];
-  };
+  san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix {};
 in
 {
   imports = [ <home-manager/nix-darwin> ];
@@ -79,27 +48,70 @@ in
   system.defaults.dock.static-only = true;
   system.defaults.dock.autohide = true;
   system.defaults.dock.show-process-indicators = false;
-  system.defaults.dock.tilesize = 64;
+  system.defaults.dock.tilesize = 56;
+  system.defaults.dock.mru-spaces = false;
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
 
+  system.defaults.trackpad.Clicking = true;
 
   # Required afterwards:
   # $ chsh -s /run/current-system/sw/bin/fish
   environment.shells = [ pkgs.fish ];
   home-manager.useUserPackages = true;
   home-manager.users.kevin = { pkgs, ... }: {
-    home.packages = (with pkgs; [
+    home.packages = with pkgs; [
       tmux
       git
       neovim
       starship
       weechat
-    ]) ++ [
-      vscode-with-extensions
     ];
     nixpkgs.config.allowUnfree = true;
+
+    programs.vscode = {
+      enable = true;
+      userSettings = {
+        workbench.colorTheme = "Min Light";
+        editor.fontFamily = "SF Mono, monospace";
+        editor.tabSize = 2;
+        editor.fontSize = 11;
+        editor.renderWhitespace = "boundary";
+        terminal.integrated.rendererType = "dom";
+        C_Cpp.updateChannel = "Insiders";
+	window.zoomLevel = -1;
+      };
+      extensions = (with pkgs.vscode-extensions; [
+        ms-vscode-remote.remote-ssh
+        vscodevim.vim
+      ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        {
+          name = "mayukaithemevsc";
+          publisher = "GulajavaMinistudio";
+          version = "1.5.1";
+          sha256 = "13pagsv3dnfp8bmnbwaz1vf7lq345lx9956vznkacbdjrnsbngnh";
+        }
+        {
+          name = "min-theme";
+          publisher = "miguelsolorio";
+          version = "1.4.5";
+          sha256 = "0i0bdcnkqr9jsb137y8vs93z508dlydzfd06byl1j3bsc7l5yilr";
+        }
+        {
+          name = "nix";
+          publisher = "bbenoist";
+          version = "1.0.1";
+          sha256 = "0zd0n9f5z1f0ckzfjr38xw2zzmcxg1gjrava7yahg5cvdcw6l35b";
+        }
+        {
+          name = "nix-env-selector";
+          publisher = "arrterian";
+          version = "0.1.2";
+          sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+        }
+      ];
+    };
 
     programs.home-manager.enable = true;
     programs.fish = {

@@ -74,6 +74,9 @@ in
       neovim
       starship
       weechat
+      fzf
+      ripgrep
+      bat
     ];
     nixpkgs.config.allowUnfree = true;
 
@@ -83,11 +86,11 @@ in
         workbench.colorTheme = "Min Light";
         editor.fontFamily = "SF Mono, monospace";
         editor.tabSize = 2;
-        editor.fontSize = 11;
+        editor.fontSize = 12;
         editor.renderWhitespace = "boundary";
         terminal.integrated.rendererType = "dom";
         C_Cpp.updateChannel = "Insiders";
-	window.zoomLevel = -1;
+        window.zoomLevel = -1;
       };
       extensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh
@@ -128,7 +131,7 @@ in
       shellInit = "
         fish_vi_key_bindings
 
-	set -g fish_color_autosuggestion '555'  'brblack'
+        set -g fish_color_autosuggestion '555'  'brblack'
         set -g fish_color_cancel -r
         set -g fish_color_command --bold
         set -g fish_color_comment red
@@ -156,32 +159,36 @@ in
       userName = "Kevin Sullivan";
       userEmail = "kevin@sull.vn";
     };
+    programs.tmux = {
+      enable = true;
+      keyMode = "vi";
+    };
     programs.alacritty = {
       enable = true;
       settings = {
         window = {
-	  padding.x   = 8;
-	  padding.y   = 8;
-	  decorations = "none";
-	  title       = "Terminal";
-	};
-	font = {
-	  size               = 10;
-	  normal.family      = "SF Mono";
-	  bold.style         = "Semibold";
-	  italic.style       = "Italic";
-	  bold_italic.style  = "Semibold Italic";
-	  use_thin_strokes   = false;
-	};
-	colors = {
+          padding.x   = 8;
+          padding.y   = 8;
+          decorations = "none";
+          title       = "Terminal";
+        };
+        font = {
+          size               = 10;
+          normal.family      = "SF Mono";
+          bold.style         = "Semibold";
+          italic.style       = "Italic";
+          bold_italic.style  = "Semibold Italic";
+          use_thin_strokes   = false;
+        };
+        colors = {
           primary = {
             background = "0x282a36";
             foreground = "0xe2e4e5";
-	  };
+          };
           cursor = {
             text   = "0x282a36";
             cursor = "0xe2e4e5";
-	  };
+          };
           normal = {
             black   = "0x282a36";
             red     = "0xff5c57";
@@ -191,7 +198,7 @@ in
             magenta = "0xff6ac1";
             cyan    = "0x9aedfe";
             white   = "0xe2e4e5";
-	  };
+          };
           bright = {
             black   = "0x78787e";
             red     = "0xff9f43";
@@ -201,10 +208,10 @@ in
             magenta = "0xeff0eb";
             cyan    = "0xb2643c";
             white   = "0xf1f1f0"; 
-	  };
-	};
-	draw_bold_text_with_bright_colors = false;
-	mouse.hide_when_typing = true;
+          };
+        };
+        draw_bold_text_with_bright_colors = false;
+        mouse.hide_when_typing = true;
       };
     };
   };

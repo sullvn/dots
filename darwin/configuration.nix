@@ -57,11 +57,11 @@ in
 
   system.defaults.trackpad.Clicking = true;
 
-  launchd.user.agents.bill-tunnel = {
-    command = "ssh bill-tunnel";
-    serviceConfig.KeepAlive = true;
-    serviceConfig.ProcessType = "Background";
-  };
+  # launchd.user.agents.bill-tunnel = {
+  #   command = "ssh bill-tunnel";
+  #   serviceConfig.KeepAlive = true;
+  #   serviceConfig.ProcessType = "Background";
+  # };
 
   # Required afterwards:
   # $ chsh -s /run/current-system/sw/bin/fish
@@ -84,10 +84,13 @@ in
       enable = true;
       userSettings = {
         workbench.colorTheme = "Min Light";
-        editor.fontFamily = "SF Mono, monospace";
-        editor.tabSize = 2;
-        editor.fontSize = 12;
-        editor.renderWhitespace = "boundary";
+        editor = {
+          fontFamily = "SF Mono, monospace";
+          tabSize = 2;
+          fontSize = 12;
+          renderWhitespace = "boundary";
+          codeActionsOnSave.source.fixAll = true;
+        };
         terminal.integrated.rendererType = "dom";
         C_Cpp.updateChannel = "Insiders";
         window.zoomLevel = -1;
@@ -119,6 +122,18 @@ in
           publisher = "arrterian";
           version = "0.1.2";
           sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+        }
+        {
+          name = "prettier-vscode";
+          publisher = "esbenp";
+          version = "5.1.3";
+          sha256 = "03i66vxvlyb3msg7b8jy9x7fpxyph0kcgr9gpwrzbqj5s7vc32sr";
+        }
+        {
+          name = "vscode-eslint";
+          publisher = "dbaeumer";
+          version = "2.1.6";
+          sha256 = "0xllvrpmxgpmn5f1w8b3gapfyv84r5c3mqy76w5mwcv0snm0981w";
         }
       ];
     };

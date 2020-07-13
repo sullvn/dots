@@ -57,11 +57,16 @@ in
 
   system.defaults.trackpad.Clicking = true;
 
-  # launchd.user.agents.bill-tunnel = {
-  #   command = "ssh bill-tunnel";
-  #   serviceConfig.KeepAlive = true;
-  #   serviceConfig.ProcessType = "Background";
-  # };
+  # Disable startup sound. No Nix setting yet
+  #
+  #    sudo nvram StartupMute=%01
+  #
+
+  launchd.user.agents.bill-tunnel = {
+    command = "ssh bill-tunnel";
+    serviceConfig.KeepAlive = true;
+    serviceConfig.ProcessType = "Background";
+  };
 
   # Required afterwards:
   # $ chsh -s /run/current-system/sw/bin/fish

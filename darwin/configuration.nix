@@ -89,16 +89,18 @@ in
       enable = true;
       userSettings = {
         workbench.colorTheme = "Min Light";
+        terminal.integrated.rendererType = "dom";
+        C_Cpp.updateChannel = "Insiders";
+        window.zoomLevel = -1;
+        update.mode = "none";
+        workbench.activityBar.visible = false;
         editor = {
           fontFamily = "SF Mono, monospace";
           tabSize = 2;
           fontSize = 12;
           renderWhitespace = "boundary";
-          codeActionsOnSave.source.fixAll = true;
+          minimap.enabled = false;
         };
-        terminal.integrated.rendererType = "dom";
-        C_Cpp.updateChannel = "Insiders";
-        window.zoomLevel = -1;
       };
       extensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh

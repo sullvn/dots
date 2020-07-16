@@ -105,6 +105,7 @@ in
       extensions = (with pkgs.vscode-extensions; [
         ms-vscode-remote.remote-ssh
         vscodevim.vim
+        matklad.rust-analyzer
       ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
           name = "mayukaithemevsc";

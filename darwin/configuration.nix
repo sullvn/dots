@@ -1,7 +1,20 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix {};
+  #
+  # TODO: /Users/kevin/.config/spotify-tui/client.yml
+  #
+  spotifydConfig.global = {
+    username = "awkwardaxolotl";
+    use_keyring = true;
+    backend = "portaudio";
+    volume_controller = "softvol";
+    device_name = "Macbook";
+    bitrate = 320;
+    device_type = "computer";
+  };
+  spotifydConfigFile = pkgs.writeText "spotifyd.conf" "${lib.generators.toINI {} spotifydConfig}";
 in
 {
   imports = [ <home-manager/nix-darwin> ];
@@ -9,8 +22,8 @@ in
   nixpkgs.config.allowUnfree = true;
   nix.package = pkgs.nix;
 
+  # Install and show in ~/Applications
   environment.systemPackages = with pkgs; [
-    # Show in ~/Applications
     alacritty
     vscode
   ];
@@ -38,10 +51,6 @@ in
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
 
-  # Auto upgrade nix package and the daemon service.
-  # services.nix-daemon.enable = true;
-  # nix.package = pkgs.nix;
-
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.fish.enable = true;
 
@@ -68,6 +77,12 @@ in
     serviceConfig.ProcessType = "Background";
   };
 
+  # launchd.user.agents.spotifyd = {
+  #    command = "${pkgs.spotifyd} --no-daemon --config-path ${spotifydConfigFile}";
+  #    serviceConfig.KeepAlive = true;
+  #    serviceConfig.ProcessType = "Background";
+  # };
+
   # Required afterwards:
   # $ chsh -s /run/current-system/sw/bin/fish
   environment.shells = [ pkgs.fish ];
@@ -82,22 +97,27 @@ in
       fzf
       ripgrep
       bat
+      spotify-tui
+      spotifyd
+      websocat
     ];
     nixpkgs.config.allowUnfree = true;
 
     programs.vscode = {
       enable = true;
       userSettings = {
-        workbench.colorTheme = "Min Light";
+        workbench.colorTheme = "Mayukai Semantic Mirage";
+        # workbench.colorTheme = "Min Light";
         terminal.integrated.rendererType = "dom";
         C_Cpp.updateChannel = "Insiders";
         window.zoomLevel = -1;
         update.mode = "none";
         workbench.activityBar.visible = false;
+        workbench.iconTheme = "material-icon-theme";
         editor = {
           fontFamily = "SF Mono, monospace";
           tabSize = 2;
-          fontSize = 12;
+          fontSize = 14;
           renderWhitespace = "boundary";
           minimap.enabled = false;
         };
@@ -143,10 +163,18 @@ in
           version = "2.1.6";
           sha256 = "0xllvrpmxgpmn5f1w8b3gapfyv84r5c3mqy76w5mwcv0snm0981w";
         }
+        {
+          name = "material-icon-theme";
+          publisher = "pkief";
+          version = "4.2.0";
+          sha256 = "1in8lj5gim3jdy33harib9z8qayp5jn8pz6j0zpicbzxx87g2hm1";
+        }
       ];
     };
 
     programs.home-manager.enable = true;
+
+    # TODO: Use `programs.starship` integration
     programs.fish = {
       enable = true;
       promptInit = "starship init fish | source";
@@ -185,6 +213,11 @@ in
     programs.tmux = {
       enable = true;
       keyMode = "vi";
+    };
+    programs.direnv = {
+      enable = true;
+      enableFishIntegration = true;
+      enableNixDirenvIntegration = true;
     };
     programs.alacritty = {
       enable = true;
@@ -296,6 +329,9 @@ in
       
       # Toggle picture-in-picture
       alt - p : yabai -m window --toggle pip
+
+      # Toggle picture-in-picture
+      alt - y : yabai -m window --toggle topmost
       
       # Close window
       shift + cmd + alt - l : yabai -m window --close

@@ -2,6 +2,7 @@
 
 let
   san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix {};
+  bottom = pkgs.callPackage ./bottom.nix {};
   #
   # TODO: /Users/kevin/.config/spotify-tui/client.yml
   #
@@ -89,17 +90,22 @@ in
   home-manager.useUserPackages = true;
   home-manager.users.kevin = { pkgs, ... }: {
     home.packages = with pkgs; [
-      tmux
-      git
-      neovim
-      starship
-      weechat
-      fzf
-      ripgrep
       bat
+      bottom
+      exa
+      fd
+      fzf
+      git
+      hexyl
+      neovim
+      netcat
+      ripgrep
       spotify-tui
       spotifyd
+      starship
+      tmux
       websocat
+      weechat
     ];
     nixpkgs.config.allowUnfree = true;
 

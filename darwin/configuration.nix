@@ -52,6 +52,16 @@ in
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
 
+  # Required afterwards:
+  #
+  #     sudo chown root:wheel /etc/static/sudoers.d/yabai
+  #
+  environment.etc.yabai = {
+    target = "sudoers.d/yabai";
+    text = "kevin ALL = (root) NOPASSWD: ${pkgs.yabai}/bin/yabai --load-sa
+    ";
+  };
+
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.fish.enable = true;
 
@@ -79,9 +89,9 @@ in
   };
 
   # launchd.user.agents.spotifyd = {
-  #    command = "${pkgs.spotifyd} --no-daemon --config-path ${spotifydConfigFile}";
-  #    serviceConfig.KeepAlive = true;
-  #    serviceConfig.ProcessType = "Background";
+  #   command = "${pkgs.spotifyd} --no-daemon --config-path ${spotifydConfigFile}";
+  #   serviceConfig.KeepAlive = true;
+  #   serviceConfig.ProcessType = "Background";
   # };
 
   # Required afterwards:
@@ -94,8 +104,11 @@ in
       bottom
       exa
       fd
+      ffmpeg
+      fswatch
       fzf
       git
+      git-lfs
       hexyl
       neovim
       netcat
@@ -112,38 +125,42 @@ in
     programs.vscode = {
       enable = true;
       userSettings = {
-        workbench.colorTheme = "Mayukai Semantic Mirage";
-        # workbench.colorTheme = "Min Light";
         terminal.integrated.rendererType = "dom";
         C_Cpp.updateChannel = "Insiders";
         window.zoomLevel = -1;
         update.mode = "none";
-        workbench.activityBar.visible = false;
-        workbench.iconTheme = "material-icon-theme";
+        workbench = {
+          editor.enablePreview = false;
+          activityBar.visible = false;
+          # colorTheme = "Min Light";
+          colorTheme = "Mayukai Semantic Mirage";
+          iconTheme = "material-icon-theme";
+        };
         editor = {
           fontFamily = "SF Mono, monospace";
-          tabSize = 2;
           fontSize = 14;
-          renderWhitespace = "boundary";
+          formatOnSave = true;
           minimap.enabled = false;
+          renderWhitespace = "boundary";
+          tabSize = 2;
         };
       };
       extensions = (with pkgs.vscode-extensions; [
+        matklad.rust-analyzer
         ms-vscode-remote.remote-ssh
         vscodevim.vim
-        matklad.rust-analyzer
       ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
           name = "mayukaithemevsc";
           publisher = "GulajavaMinistudio";
-          version = "1.5.1";
-          sha256 = "13pagsv3dnfp8bmnbwaz1vf7lq345lx9956vznkacbdjrnsbngnh";
+          version = "1.6.0";
+          sha256 = "17fldjnhxgccllv9yxw32w2zrykiixfcprlhapmz3hwj6wyz3qkv";
         }
         {
           name = "min-theme";
           publisher = "miguelsolorio";
-          version = "1.4.5";
-          sha256 = "0i0bdcnkqr9jsb137y8vs93z508dlydzfd06byl1j3bsc7l5yilr";
+          version = "1.4.7";
+          sha256 = "00whlmvx4k6qvfyqdmhyx7wvmhj180fh0yb8q4fgdr9bjiawhlyb";
         }
         {
           name = "nix";
@@ -160,20 +177,20 @@ in
         {
           name = "prettier-vscode";
           publisher = "esbenp";
-          version = "5.1.3";
-          sha256 = "03i66vxvlyb3msg7b8jy9x7fpxyph0kcgr9gpwrzbqj5s7vc32sr";
+          version = "5.8.0";
+          sha256 = "0h7wc4pffyq1i8vpj4a5az02g2x04y7y1chilmcfmzg2w42xpby7";
         }
         {
           name = "vscode-eslint";
           publisher = "dbaeumer";
-          version = "2.1.6";
-          sha256 = "0xllvrpmxgpmn5f1w8b3gapfyv84r5c3mqy76w5mwcv0snm0981w";
+          version = "2.1.14";
+          sha256 = "113w2iis4zi4z3sqc3vd2apyrh52hbh2gvmxjr5yvjpmrsksclbd";
         }
         {
           name = "material-icon-theme";
           publisher = "pkief";
-          version = "4.2.0";
-          sha256 = "1in8lj5gim3jdy33harib9z8qayp5jn8pz6j0zpicbzxx87g2hm1";
+          version = "4.4.0";
+          sha256 = "1m9mis59j9xnf1zvh67p5rhayaa9qxjiw9iw847nyl9vsy73w8ya";
         }
       ];
     };
@@ -282,7 +299,11 @@ in
   services.yabai = {
     enable = true;
     package = pkgs.yabai;
-    enableScriptingAddition = true;
+    #
+    # Broken in MacOS 11.0. Custom config used instead.
+    #
+    # enableScriptingAddition = true;
+    #
     config = {
       layout         = "bsp";
       top_padding    = 5;
@@ -291,6 +312,10 @@ in
       right_padding  = 5;
       window_gap     = 5;
     };
+    extraConfig = "
+      sudo yabai --load-sa
+      yabai -m signal --add event=dock_did_restart action=\"sudo yabai --load-sa\"
+    ";
   };
 
   services.skhd = {
@@ -343,7 +368,7 @@ in
       shift + cmd + alt - l : yabai -m window --close
 
       # Terminal
-      alt - space : open --new ~/Applications/Alacritty.app
+      alt - space : open --new -a Alacritty
     ";
   };
 

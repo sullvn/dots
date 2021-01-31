@@ -1,4 +1,4 @@
-{ rustPlatform, stdenv, fetchFromGitHub, darwin }:
+{ rustPlatform, stdenv, fetchFromGitHub, darwin, pkgs }:
 
 rustPlatform.buildRustPackage rec {
   pname = "bottom";
@@ -14,10 +14,10 @@ rustPlatform.buildRustPackage rec {
   cargoSha256 = "10z3ycl36sfhb2d1zdxrylcygw021ackavdaf4k6zsqsrm0gmrax";
   verifyCargoDeps = true;
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.IOKit ];
+  buildInputs = pkgs.lib.optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.IOKit ];
   doCheck = false;
 
-  meta = with stdenv.lib; {
+  meta = with pkgs.lib; {
     description = "Yet another cross-platform graphical process/system monitor";
     homepage = https://github.com/ClementTsang/bottom;
     license = licenses.mit;

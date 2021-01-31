@@ -2,7 +2,7 @@
 
 let
   san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix {};
-  bottom = pkgs.callPackage ./bottom.nix {};
+  # bottom = pkgs.callPackage ./bottom.nix {};
   #
   # TODO: /Users/kevin/.config/spotify-tui/client.yml
   #
@@ -22,6 +22,17 @@ in
 
   nixpkgs.config.allowUnfree = true;
   nix.package = pkgs.nix;
+
+  # Fix root channel path errors
+  #
+  # https://github.com/LnL7/nix-darwin/issues/145#issuecomment-751423168
+  #
+  nix.nixPath = pkgs.lib.mkForce [{
+    darwin-config = builtins.concatStringsSep ":" [
+      "$HOME/.config/nixpkgs/darwin/configuration.nix"
+      "$HOME/.nix-defexpr/channels"
+    ];
+  }];
 
   # Install and show in ~/Applications
   environment.systemPackages = with pkgs; [
@@ -63,7 +74,11 @@ in
   };
 
   # Create /etc/bashrc that loads the nix-darwin environment.
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    useBabelfish = true;
+    babelfishPackage = pkgs.babelfish;
+  };
 
   system.defaults.dock.orientation = "left";
   system.defaults.dock.static-only = true;
@@ -101,7 +116,7 @@ in
   home-manager.users.kevin = { pkgs, ... }: {
     home.packages = with pkgs; [
       bat
-      bottom
+      # bottom
       exa
       fd
       ffmpeg
@@ -127,13 +142,16 @@ in
       userSettings = {
         terminal.integrated.rendererType = "dom";
         C_Cpp.updateChannel = "Insiders";
-        window.zoomLevel = -1;
         update.mode = "none";
+        window = {
+          autoDetectColorScheme = true;
+          zoomLevel = -1;
+        };
         workbench = {
           editor.enablePreview = false;
           activityBar.visible = false;
-          # colorTheme = "Min Light";
-          colorTheme = "Mayukai Semantic Mirage";
+          preferredLightColorTheme = "Min Light";
+          preferredDarkColorTheme = "Mayukai Semantic Mirage";
           iconTheme = "material-icon-theme";
         };
         editor = {

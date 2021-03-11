@@ -16,6 +16,20 @@ let
     device_type = "computer";
   };
   spotifydConfigFile = pkgs.writeText "spotifyd.conf" "${lib.generators.toINI {} spotifydConfig}";
+  yabai = pkgs.yabai.overrideAttrs (o: rec {
+    version = "3.3.7";
+    src = builtins.fetchTarball {
+      url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
+      sha256 = "1ywccgqajyqb8pqaxap2dci6wy2jba6snrzsiawdmnbvv1bsp3z2";
+    };
+
+    installPhase = ''
+      mkdir -p $out/bin
+      mkdir -p $out/share/man/man1/
+      cp ./archive/bin/yabai $out/bin/yabai
+      cp ./archive/doc/yabai.1 $out/share/man/man1/yabai.1
+    '';
+  });
 in
 {
   imports = [ <home-manager/nix-darwin> ];
@@ -69,7 +83,7 @@ in
   #
   environment.etc.yabai = {
     target = "sudoers.d/yabai";
-    text = "kevin ALL = (root) NOPASSWD: ${pkgs.yabai}/bin/yabai --load-sa
+    text = "kevin ALL = (root) NOPASSWD: ${yabai}/bin/yabai --load-sa
     ";
   };
 
@@ -86,11 +100,14 @@ in
   system.defaults.dock.show-process-indicators = false;
   system.defaults.dock.tilesize = 56;
   system.defaults.dock.mru-spaces = false;
+  system.defaults.dock.show-recents = false;
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
 
   system.defaults.trackpad.Clicking = true;
+
+  users.nix.configureBuildUsers = true;
 
   # Disable startup sound. No Nix setting yet
   #
@@ -150,6 +167,7 @@ in
         workbench = {
           editor.enablePreview = false;
           activityBar.visible = false;
+          colorTheme = "Mayukai Semantic Mirage";
           preferredLightColorTheme = "Min Light";
           preferredDarkColorTheme = "Mayukai Semantic Mirage";
           iconTheme = "material-icon-theme";
@@ -316,9 +334,9 @@ in
   # System integrity needs to be disabled
   services.yabai = {
     enable = true;
-    package = pkgs.yabai;
+    package = yabai;
     #
-    # Broken in MacOS 11.0. Custom config used instead.
+    # Broken in MacOS 11. Custom config used instead.
     #
     # enableScriptingAddition = true;
     #

@@ -17,10 +17,11 @@ let
   };
   spotifydConfigFile = pkgs.writeText "spotifyd.conf" "${lib.generators.toINI {} spotifydConfig}";
   yabai = pkgs.yabai.overrideAttrs (o: rec {
-    version = "3.3.7";
+    # WARNING: Hash must be changed as well as version. Otherwise the cache will prevent a real update.
+    version = "3.3.10";
     src = builtins.fetchTarball {
       url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-      sha256 = "1ywccgqajyqb8pqaxap2dci6wy2jba6snrzsiawdmnbvv1bsp3z2";
+      sha256 = "025ww9kjpy72in3mbn23pwzf3fvw0r11ijn1h5pjqvsdlak91h9i";
     };
 
     installPhase = ''
@@ -30,6 +31,71 @@ let
       cp ./archive/doc/yabai.1 $out/share/man/man1/yabai.1
     '';
   });
+  nvim-cmp = pkgs.vimUtils.buildVimPlugin {
+    name = "nvim-cmp";
+    src = pkgs.fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "nvim-cmp";
+      rev = "b6b15d5f6e46643462b5e62269e7babdab17331c";
+      sha256 = "1hd4af1y2bcb84jcv31xv7p4psgq6skw7llhfrgqkjgrj6wds76k";
+    };
+    buildPhase = ":";
+  };
+  nvim-cmp-lsp = pkgs.vimUtils.buildVimPlugin {
+    name = "cmp-nvim-lsp";
+    src = pkgs.fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "cmp-nvim-lsp";
+      rev = "f6f471898bc4b45eacd36eef9887847b73130e0e";
+      sha256 = "1asr32w5q618pqggq9jwrbqs4kjp3ssbw5pca5wc7j2496vm2lhg";
+    };
+    buildPhase = ":";
+  };
+  nvim-lsp-extensions = pkgs.vimUtils.buildVimPlugin {
+    name = "lsp_extensions.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "nvim-lua";
+      repo = "lsp_extensions.nvim";
+      rev = "379a935b797f5f8a386bcbfd3b105da8007a9303";
+      sha256 = "05q9i93xvp5p770fpg8wkyngq8ncr6b21fdkh9crcgfi1bp7rhqr";
+    };
+  };
+  nvim-rust-tools = pkgs.vimUtils.buildVimPlugin {
+    name = "rust-tools.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "simrat39";
+      repo = "rust-tools.nvim";
+      rev = "cd5105d76fc124634b53039c02ea253cc06bc9b9";
+      sha256 = "1bhjzng02yfnlfr3kvh6lkl5vbpcmcd51kpgg7yjxmlzlga5k2k3";
+    };
+  };
+  nvim-vsnip = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-vsnip";
+    src = pkgs.fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "vim-vsnip";
+      rev = "87d144b7451deb3ab55f1a3e3c5124cfab2b02fa";
+      sha256 = "17gw992xvxsa6wyirah17xbsdi2gl4lif8ibvbs7dwagnkv01vyb";
+    };
+  };
+  nvim-ayu-theme = pkgs.vimUtils.buildVimPlugin {
+    name = "ayu-vim";
+    src = pkgs.fetchFromGitHub {
+      owner = "ayu-theme";
+      repo = "ayu-vim";
+      rev = "0745635421688ce777f663d13531996cb4da6514";
+      sha256 = "0w7ixhz72g3lr1hkn450k6x8sdgv95pp6pxbykka3s01i506rzmj";
+    };
+  };
+  nvim-lsp-saga = pkgs.vimUtils.buildVimPlugin {
+    name = "lspsaga.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "glepnir";
+      repo = "lspsaga.nvim";
+      rev = "cb0e35d2e594ff7a9c408d2e382945d56336c040";
+      sha256 = "0ywhdgh6aqs0xlm8a4d9jhkik254ywagang12r5nyqxawjsmjnib";
+    };
+  };
 in
 {
   imports = [ <home-manager/nix-darwin> ];
@@ -50,9 +116,14 @@ in
 
   # Install and show in ~/Applications
   environment.systemPackages = with pkgs; [
-    alacritty
     vscode
+    libiconv
+    alacritty
   ];
+
+  environment.variables = {
+    EDITOR = "nvim";
+  };
 
   fonts.enableFontDir = true;
   fonts.fonts = [
@@ -142,17 +213,116 @@ in
       git
       git-lfs
       hexyl
-      neovim
+      mosh
       netcat
       ripgrep
+      screen
       spotify-tui
-      spotifyd
+      # spotifyd
       starship
+      telnet
       tmux
-      websocat
-      weechat
+      # websocat
+      # weechat
     ];
     nixpkgs.config.allowUnfree = true;
+
+    programs.neovim = {
+      enable = true;
+      plugins = with pkgs.vimPlugins; [
+        nvim-lspconfig
+        nvim-lsp-extensions
+        nvim-lsp-saga
+        nvim-cmp
+        nvim-cmp-lsp
+        nvim-rust-tools
+        nvim-vsnip
+	nvim-ayu-theme
+      ];
+      extraPackages = [
+        pkgs.rust-analyzer
+      ];
+      extraConfig = "
+set termguicolors
+let ayucolor=\"mirage\"
+colorscheme ayu
+
+set completeopt=menuone,noinsert,noselect
+set shortmess+=c
+
+lua <<EOF
+
+-- nvim_lsp object
+local nvim_lsp = require'lspconfig'
+
+local opts = {
+    tools = {
+        autoSetHints = true,
+        hover_with_actions = true,
+        inlay_hints = {
+            show_parameter_hints = true,
+            parameter_hints_prefix = \"\",
+            other_hints_prefix = \"\",
+        },
+    },
+
+    -- all the opts to send to nvim-lspconfig
+    -- these override the defaults set by rust-tools.nvim
+    -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
+    server = {
+        -- on_attach is a callback called when the language server attachs to the buffer
+        -- on_attach = on_attach,
+        settings = {
+            -- to enable rust-analyzer settings visit:
+            -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+            [\"rust-analyzer\"] = {}
+        }
+    },
+}
+
+require('rust-tools').setup(opts)
+EOF
+
+lua <<EOF
+local cmp = require'cmp'
+cmp.setup({
+  snippet = {
+    expand = function(args)
+        vim.fn[\"vsnip#anonymous\"](args.body)
+    end,
+  },
+  mapping = {
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    -- Add tab support
+    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+    ['<Tab>'] = cmp.mapping.select_next_item(),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<CR>'] = cmp.mapping.confirm({
+      behavior = cmp.ConfirmBehavior.Insert,
+      select = true,
+    })
+  },
+
+  -- Installed sources
+  sources = {
+    { name = 'nvim_lsp' },
+  },
+})
+EOF
+
+lua <<EOF
+local saga = require 'lspsaga'
+saga.init_lsp_saga()
+EOF
+
+set signcolumn=yes
+set updatetime=300
+autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()";
+    };
 
     programs.vscode = {
       enable = true;
@@ -189,7 +359,7 @@ in
         {
           name = "mayukaithemevsc";
           publisher = "GulajavaMinistudio";
-          version = "1.6.0";
+          version = "2.0.5";
           sha256 = "17fldjnhxgccllv9yxw32w2zrykiixfcprlhapmz3hwj6wyz3qkv";
         }
         {
@@ -207,25 +377,25 @@ in
         {
           name = "nix-env-selector";
           publisher = "arrterian";
-          version = "0.1.2";
+          version = "1.0.7";
           sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
         }
         {
           name = "prettier-vscode";
           publisher = "esbenp";
-          version = "5.8.0";
+          version = "6.3.1";
           sha256 = "0h7wc4pffyq1i8vpj4a5az02g2x04y7y1chilmcfmzg2w42xpby7";
         }
         {
           name = "vscode-eslint";
           publisher = "dbaeumer";
-          version = "2.1.14";
+          version = "2.1.19";
           sha256 = "113w2iis4zi4z3sqc3vd2apyrh52hbh2gvmxjr5yvjpmrsksclbd";
         }
         {
           name = "material-icon-theme";
           publisher = "pkief";
-          version = "4.4.0";
+          version = "4.6.0";
           sha256 = "1m9mis59j9xnf1zvh67p5rhayaa9qxjiw9iw847nyl9vsy73w8ya";
         }
       ];
@@ -272,11 +442,12 @@ in
     programs.tmux = {
       enable = true;
       keyMode = "vi";
+      historyLimit = 50000;
     };
     programs.direnv = {
       enable = true;
       enableFishIntegration = true;
-      enableNixDirenvIntegration = true;
+      nix-direnv.enable = true;
     };
     programs.alacritty = {
       enable = true;
@@ -404,7 +575,7 @@ in
       shift + cmd + alt - l : yabai -m window --close
 
       # Terminal
-      alt - space : open --new -a Alacritty
+      alt - space : open --new -a ~/Applications/Alacritty.app
     ";
   };
 

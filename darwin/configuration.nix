@@ -96,6 +96,26 @@ let
       sha256 = "0ywhdgh6aqs0xlm8a4d9jhkik254ywagang12r5nyqxawjsmjnib";
     };
   };
+  nvim-plenary = pkgs.vimUtils.buildVimPlugin {
+    name = "plenary.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "nvim-lua";
+      repo = "plenary.nvim";
+      rev = "06266e7bf675ba9af887fb6d1661b289fdd9bcf4";
+      sha256 = "02c1y9ygzq8fmcgy7l4khpb141v2fww3gbl8vf0ds2f70zgglxs4";
+    };
+    buildPhase = ":";
+  };
+  nvim-telescope = pkgs.vimUtils.buildVimPlugin {
+    name = "telescope.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "nvim-telescope";
+      repo = "telescope.nvim";
+      rev = "12a44ededa1fc2426d40886feb4034230759a19a";
+      sha256 = "0h2idrbi8ahldvgrlcl6hi5bjm2gwd4raz3k7mc3k34vmfk3r29z";
+    };
+    buildPhase = ":";
+  };
 in
 {
   imports = [ <home-manager/nix-darwin> ];
@@ -238,9 +258,11 @@ in
         nvim-rust-tools
         nvim-vsnip
 	nvim-ayu-theme
+	nvim-plenary
+	nvim-telescope
       ];
-      extraPackages = [
-        pkgs.rust-analyzer
+      extraPackages = with pkgs; [
+        rust-analyzer
       ];
       extraConfig = "
 set termguicolors
@@ -249,6 +271,7 @@ colorscheme ayu
 
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
+set mouse=a
 
 lua <<EOF
 
@@ -281,6 +304,10 @@ local opts = {
 }
 
 require('rust-tools').setup(opts)
+EOF
+
+lua <<EOF
+require'lspconfig'.tsserver.setup{}
 EOF
 
 lua <<EOF
@@ -321,7 +348,12 @@ EOF
 
 set signcolumn=yes
 set updatetime=300
-autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()";
+autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
+
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
     };
 
     programs.vscode = {

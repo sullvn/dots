@@ -238,10 +238,9 @@ in
       ripgrep
       screen
       spotify-tui
-      # spotifyd
+      spotifyd
       starship
       telnet
-      tmux
       # websocat
       # weechat
     ];
@@ -475,6 +474,11 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
       enable = true;
       keyMode = "vi";
       historyLimit = 50000;
+      escapeTime = 0;
+      terminal = "screen-256color";
+      extraConfig = ''
+        set -ga terminal-overrides ",xterm-256color*:Tc"
+      '';
     };
     programs.direnv = {
       enable = true;
@@ -498,34 +502,31 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
           bold_italic.style  = "Semibold Italic";
           use_thin_strokes   = false;
         };
+        # Colors - Eqie6
         colors = {
           primary = {
-            background = "0x282a36";
-            foreground = "0xe2e4e5";
-          };
-          cursor = {
-            text   = "0x282a36";
-            cursor = "0xe2e4e5";
+            background = "#111111";
+            foreground = "#cccccc";
           };
           normal = {
-            black   = "0x282a36";
-            red     = "0xff5c57";
-            green   = "0x5af78e";
-            yellow  = "0xf3f99d";
-            blue    = "0x57c7ff";
-            magenta = "0xff6ac1";
-            cyan    = "0x9aedfe";
-            white   = "0xe2e4e5";
+            black   = "#222222";
+            red     = "#e84f4f";
+            green   = "#b7ce42";
+            yellow  = "#fea63c";
+            blue    = "#66a9b9";
+            magenta = "#b7416e";
+            cyan    = "#6d878d";
+            white   = "#cccccc";
           };
           bright = {
-            black   = "0x78787e";
-            red     = "0xff9f43";
-            green   = "0x34353e";
-            yellow  = "0x43454f";
-            blue    = "0xa5a5a9";
-            magenta = "0xeff0eb";
-            cyan    = "0xb2643c";
-            white   = "0xf1f1f0"; 
+            black   = "#666666";
+            red     = "#d23d3d";
+            green   = "#bde077";
+            yellow  = "#ffe863";
+            blue    = "#aaccbb";
+            magenta = "#e16a98";
+            cyan    = "#42717b";
+            white   = "#ffffff";
           };
         };
         draw_bold_text_with_bright_colors = false;

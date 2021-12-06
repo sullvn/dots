@@ -21,7 +21,7 @@ let
     version = "3.3.10";
     src = builtins.fetchTarball {
       url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-      sha256 = "025ww9kjpy72in3mbn23pwzf3fvw0r11ijn1h5pjqvsdlak91h9i";
+      sha256 = "1z95njalhvyfs2xx6d91p9b013pc4ad846drhw0k5gipvl03pp92";
     };
 
     installPhase = ''
@@ -172,11 +172,11 @@ in
   #
   #     sudo chown root:wheel /etc/static/sudoers.d/yabai
   #
-  environment.etc.yabai = {
-    target = "sudoers.d/yabai";
-    text = "kevin ALL = (root) NOPASSWD: ${yabai}/bin/yabai --load-sa
-    ";
-  };
+  # environment.etc.yabai = {
+  #   target = "sudoers.d/yabai";
+  #   text = "kevin ALL = (root) NOPASSWD: ${yabai}/bin/yabai --load-sa
+  #   ";
+  # };
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.fish = {
@@ -249,31 +249,48 @@ in
     programs.neovim = {
       enable = true;
       plugins = with pkgs.vimPlugins; [
-        nvim-lspconfig
-        nvim-lsp-extensions
-        nvim-lsp-saga
+        nvim-ayu-theme
+        nvim-plenary
+        nvim-telescope
         nvim-cmp
         nvim-cmp-lsp
+        nvim-lsp-extensions
+        nvim-lsp-saga
+        nvim-lspconfig
         nvim-rust-tools
+        nvim-treesitter
         nvim-vsnip
-	nvim-ayu-theme
-	nvim-plenary
-	nvim-telescope
       ];
       extraPackages = with pkgs; [
         rust-analyzer
       ];
       extraConfig = "
 set termguicolors
-let ayucolor=\"mirage\"
+let ayucolor=\"light\"
 colorscheme ayu
 
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 set mouse=a
+set shiftwidth=2
+set tabstop=2
+set expandtab
+set lazyredraw
+set ttyfast
 
 lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = \"maintained\",
+  sync_install = false,
+  ignore_install = {},
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+}
+EOF
 
+lua <<EOF
 -- nvim_lsp object
 local nvim_lsp = require'lspconfig'
 
@@ -307,6 +324,13 @@ EOF
 
 lua <<EOF
 require'lspconfig'.tsserver.setup{}
+EOF
+
+lua <<EOF
+require'lspconfig'.clangd.setup{
+  -- Use newer MacOS clang
+  cmd = { \"/usr/bin/clangd\", \"--background-index\" },
+}
 EOF
 
 lua <<EOF
@@ -391,7 +415,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
           name = "mayukaithemevsc";
           publisher = "GulajavaMinistudio";
           version = "2.0.5";
-          sha256 = "17fldjnhxgccllv9yxw32w2zrykiixfcprlhapmz3hwj6wyz3qkv";
+          sha256 = "0m8r310bswsablfm7zqyimjsifdfy9iy4rgi4zh9yrilxbf9p02i";
         }
         {
           name = "min-theme";
@@ -409,7 +433,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
           name = "nix-env-selector";
           publisher = "arrterian";
           version = "1.0.7";
-          sha256 = "1n5ilw1k29km9b0yzfd32m8gvwa2xhh6156d4dys6l8sbfpp2cv9";
+          sha256 = "0mralimyzhyp4x9q98x3ck64ifbjqdp8cxcami7clvdvkmf8hxhf";
         }
         {
           name = "prettier-vscode";
@@ -437,7 +461,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
     # TODO: Use `programs.starship` integration
     programs.fish = {
       enable = true;
-      promptInit = "starship init fish | source";
+      interactiveShellInit = "starship init fish | source";
       functions.fish_greeting = "";
       shellInit = "
         fish_vi_key_bindings
@@ -478,6 +502,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
       terminal = "screen-256color";
       extraConfig = ''
         set -ga terminal-overrides ",xterm-256color*:Tc"
+        set-option -g mouse on
       '';
     };
     programs.direnv = {
@@ -495,7 +520,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
           title       = "Terminal";
         };
         font = {
-          size               = 10;
+          size               = 14;
           normal.family      = "SF Mono";
           bold.style         = "Semibold";
           italic.style       = "Italic";
@@ -536,27 +561,27 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>";
   };
 
   # System integrity needs to be disabled
-  services.yabai = {
-    enable = true;
-    package = yabai;
-    #
-    # Broken in MacOS 11. Custom config used instead.
-    #
-    # enableScriptingAddition = true;
-    #
-    config = {
-      layout         = "bsp";
-      top_padding    = 5;
-      bottom_padding = 5;
-      left_padding   = 5;
-      right_padding  = 5;
-      window_gap     = 5;
-    };
-    extraConfig = "
-      sudo yabai --load-sa
-      yabai -m signal --add event=dock_did_restart action=\"sudo yabai --load-sa\"
-    ";
-  };
+  # services.yabai = {
+  #   enable = false;
+  #   package = yabai;
+  #   #
+  #   # Broken in MacOS 11. Custom config used instead.
+  #   #
+  #   # enableScriptingAddition = true;
+  #   #
+  #   config = {
+  #     layout         = "bsp";
+  #     top_padding    = 5;
+  #     bottom_padding = 5;
+  #     left_padding   = 5;
+  #     right_padding  = 5;
+  #     window_gap     = 5;
+  #   };
+  #   extraConfig = "
+  #     sudo yabai --load-sa
+  #     yabai -m signal --add event=dock_did_restart action=\"sudo yabai --load-sa\"
+  #   ";
+  # };
 
   services.skhd = {
     enable = true;

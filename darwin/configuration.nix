@@ -154,7 +154,7 @@ in
     programs.helix = {
       enable = true;
       settings = {
-        theme = "base16_transparent";
+        theme = "catppuccin_macchiato";
         editor = {
           auto-save = true;
           bufferline = "multiple";
@@ -192,6 +192,19 @@ in
       keyMode = "vi";
       historyLimit = 50000;
       escapeTime = 0;
+
+      #
+      # Default terminal
+      #
+      # Needs to be derivative "screen"
+      # or "tmux", but we've had issues
+      # with "screen".
+      #
+      # See Tmux man page and [this Gist][0].
+      #
+      # [0]: https://gist.github.com/andersevenrud/015e61af2fd264371032763d4ed965b6
+      #
+      terminal = "tmux-25color";
       extraConfig = ''
         set-option -g mouse on
       '';

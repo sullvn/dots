@@ -151,6 +151,8 @@ in
       starship
     ];
 
+    home.file.".hushlogin".text = "";
+
     programs.helix = {
       enable = true;
       settings = {

@@ -168,6 +168,14 @@ in
     programs.starship = {
       enable = true;
       enableFishIntegration = true;
+      settings = {
+        gcloud.disabled = true;
+        nix_shell.disabled = true;
+        nodejs.disabled = true;
+        package.disabled = true;
+        rust.disabled = true;
+        git_branch.symbol = "";
+      };
     };
 
     programs.fish = {

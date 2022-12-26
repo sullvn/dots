@@ -212,9 +212,14 @@ in
       #
       # See Tmux man page and [this Gist][0].
       #
-      # [0]: https://gist.github.com/andersevenrud/015e61af2fd264371032763d4ed965b6
+      # MacOS includes an old terminfo
+      # database, so you'll need to add
+      # `tmux-256color` [terminfo manually][1].
       #
-      terminal = "tmux-25color";
+      # [0]: https://gist.github.com/andersevenrud/015e61af2fd264371032763d4ed965b6
+      # [1]: https://gist.github.com/nicm/ea9cf3c93f22e0246ec858122d9abea1
+      #
+      terminal = "tmux-256color";
       extraConfig = ''
         set-option -g mouse on
       '';

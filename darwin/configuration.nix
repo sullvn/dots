@@ -146,9 +146,10 @@ in
       mosh
       netcat
       nmap
+      pastel
       ripgrep
       rnix-lsp
-      starship
+      up
     ];
 
     home.file.".hushlogin".text = "";
@@ -247,6 +248,7 @@ in
       terminal = "tmux-256color";
       extraConfig = ''
         set-option -g mouse on
+        set-option -ag terminal-overrides ",$TERM:RGB"
       '';
     };
 
@@ -300,6 +302,7 @@ in
         };
         draw_bold_text_with_bright_colors = false;
         mouse.hide_when_typing = true;
+        # env.TERM = "xterm-256color";
       };
     };
   };

@@ -356,6 +356,10 @@ in
       # Create/delete space
       cmd + alt - o : yabai -m space --create
       shift + cmd + alt - o : yabai -m space --destroy
+
+      # Focus display next/prev
+      alt - e : yabai -m display --focus prev
+      alt - r : yabai -m display --focus next
       
       # Toggle native fullscreen
       alt - f : yabai -m window --toggle native-fullscreen

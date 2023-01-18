@@ -269,8 +269,9 @@ in
         font = {
           size               = 14;
           normal.family      = "SF Mono";
+          normal.style       = "Light";
+          italic.style       = "Light Italic";
           bold.style         = "Semibold";
-          italic.style       = "Italic";
           bold_italic.style  = "Semibold Italic";
         };
         # Colors - Eqie6
@@ -302,7 +303,6 @@ in
         };
         draw_bold_text_with_bright_colors = false;
         mouse.hide_when_typing = true;
-        # env.TERM = "xterm-256color";
       };
     };
   };

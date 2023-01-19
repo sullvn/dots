@@ -267,42 +267,53 @@ in
           title       = "Terminal";
         };
         font = {
-          size               = 14;
+          size               = 15;
+          offset.x           = 1;
           normal.family      = "SF Mono";
-          normal.style       = "Light";
-          italic.style       = "Light Italic";
-          bold.style         = "Semibold";
-          bold_italic.style  = "Semibold Italic";
-        };
-        # Colors - Eqie6
-        colors = {
-          primary = {
-            background = "#211111";
-            foreground = "#cccccc";
-          };
-          normal = {
-            black   = "#222222";
-            red     = "#e84f4f";
-            green   = "#b7ce42";
-            yellow  = "#fea63c";
-            blue    = "#66a9b9";
-            magenta = "#b7416e";
-            cyan    = "#6d878d";
-            white   = "#cccccc";
-          };
-          bright = {
-            black   = "#666666";
-            red     = "#d23d3d";
-            green   = "#bde077";
-            yellow  = "#ffe863";
-            blue    = "#aaccbb";
-            magenta = "#e16a98";
-            cyan    = "#42717b";
-            white   = "#ffffff";
-          };
+          normal.style       = "Regular";
+          italic.style       = "Regular Italic";
+          bold.style         = "Bold";
+          bold_italic.style  = "Bold Italic";
         };
         draw_bold_text_with_bright_colors = false;
         mouse.hide_when_typing = true;
+        colors = {
+          name = "TokyoNight Storm";
+          primary = {
+            background = "#24283b";
+            foreground = "#c0caf5";
+          };
+          normal = {
+            black   = "#1d202f";
+            red     = "#f7768e";
+            green   = "#9ece6a";
+            yellow  = "#e0af68";
+            blue    = "#7aa2f7";
+            magenta = "#bb9af7";
+            cyan    = "#7dcfff";
+            white   = "#a9b1d6";
+          };
+          bright = {
+            black   = "#414868";
+            red     = "#f7768e";
+            green   = "#9ece6a";
+            yellow  = "#e0af68";
+            blue    = "#7aa2f7";
+            magenta = "#bb9af7";
+            cyan    = "#7dcfff";
+            white   = "#c0caf5";
+          };
+          indexed_colors = [
+            {
+              index = 16;
+              color = "#ff9e64";
+            }
+            {
+              index = 17;
+              color = "#db4b4b";
+            }
+          ];
+        };
       };
     };
   };

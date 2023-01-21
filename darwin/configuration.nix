@@ -267,7 +267,7 @@ in
           title       = "Terminal";
         };
         font = {
-          size               = 15;
+          size               = 14;
           offset.x           = 1;
           normal.family      = "SF Mono";
           normal.style       = "Regular";

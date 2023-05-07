@@ -4,10 +4,10 @@ let
   san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix {};
   yabai = pkgs.yabai.overrideAttrs (o: rec {
     # WARNING: Hash must be changed as well as version. Otherwise the cache will prevent a real update.
-    version = "5.0.2";
+    version = "5.0.3";
     src = builtins.fetchTarball {
       url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-      sha256 = "13q8awbmp2vb1f9iycbvlfd5c2fmk5786cwm40bv6zwi4w8bplgy";
+      sha256 = "1l306siwdv84m4az40dg30jrmrh4apjy0dhhmdqmgqg9p3z74f77";
     };
     phases = ["unpackPhase" "installPhase"];
     installPhase = ''
@@ -50,6 +50,7 @@ in
     systemPackages = with pkgs; [
       libiconv
       alacritty
+      utm
     ];
 
     # Required afterwards:
@@ -164,6 +165,7 @@ in
           cursorline = true;
           indent-guides.render = true;
           cursor-shape.insert = "bar";
+          undercurl = true;
         };
       };
     };
@@ -186,6 +188,7 @@ in
       functions.fish_greeting = "";
       shellAliases = {
         ls = "exa";
+        cat = "bat --theme Coldark-Dark";
       };
       shellInit = ''
         fish_vi_key_bindings
@@ -242,13 +245,18 @@ in
       # database, so you'll need to add
       # `tmux-256color` [terminfo manually][1].
       #
+      # Then there are [undercurls][2].
+      #
       # [0]: https://gist.github.com/andersevenrud/015e61af2fd264371032763d4ed965b6
       # [1]: https://gist.github.com/nicm/ea9cf3c93f22e0246ec858122d9abea1
+      # [2]: https://ryantravitz.com/blog/2023-02-18-pull-of-the-undercurl/
       #
       terminal = "tmux-256color";
       extraConfig = ''
         set-option -g mouse on
         set-option -ag terminal-overrides ",$TERM:RGB"
+        set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+        set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
       '';
     };
 

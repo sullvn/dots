@@ -4,10 +4,10 @@ let
   san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix {};
   yabai = pkgs.yabai.overrideAttrs (o: rec {
     # WARNING: Hash must be changed as well as version. Otherwise the cache will prevent a real update.
-    version = "5.0.3";
+    version = "6.0.1";
     src = builtins.fetchTarball {
       url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-      sha256 = "1l306siwdv84m4az40dg30jrmrh4apjy0dhhmdqmgqg9p3z74f77";
+      sha256 = "08cs0h4x1ah3ipyj2dgskbpciwqfddc3ax8z176cadylr9svjrf0";
     };
     phases = ["unpackPhase" "installPhase"];
     installPhase = ''
@@ -38,14 +38,16 @@ in
   };
   nixpkgs.config.allowUnfree = true;
 
+  # Required by Home Manager
+  #
+  # See: https://github.com/nix-community/home-manager/issues/4026
+  #
+  users.users.kevin.home = "/Users/kevin";
+
   environment = {
     # Required afterwards:
     # $ chsh -s /run/current-system/sw/bin/fish
     shells = [ pkgs.fish ];
-
-    variables = {
-      EDITOR = "hx";
-    };
 
     systemPackages = with pkgs; [
       libiconv
@@ -137,13 +139,16 @@ in
 
     home.packages = with pkgs; [
       bat
-      exa
+      eza
       fd
       ffmpeg
       fzf
       git
       git-lfs
+      glow
       hexyl
+      jq
+      iosevka-bin
       mosh
       netcat
       nmap
@@ -151,22 +156,23 @@ in
       ripgrep
       rnix-lsp
       up
+      # visidata
     ];
 
     home.file.".hushlogin".text = "";
 
     programs.helix = {
       enable = true;
-      settings = {
-        theme = "catppuccin_macchiato";
-        editor = {
-          auto-save = true;
-          bufferline = "multiple";
-          cursorline = true;
-          indent-guides.render = true;
-          cursor-shape.insert = "bar";
-          undercurl = true;
-        };
+      defaultEditor = true;
+      languages = {
+        language = [
+          {
+            name = "cpp";
+            file-types = ["cpp" "cppm"];
+            auto-format = true;
+          }
+        ];
+        language-server.rust-analyzer.config.check.command = "clippy";
       };
     };
 
@@ -187,7 +193,7 @@ in
       enable = true;
       functions.fish_greeting = "";
       shellAliases = {
-        ls = "exa";
+        ls = "eza";
         cat = "bat --theme Coldark-Dark";
       };
       shellInit = ''
@@ -268,6 +274,7 @@ in
     programs.alacritty = {
       enable = true;
       settings = {
+        import = ["~/.config/alacritty/theme.yaml"];
         window = {
           padding.x   = 8;
           padding.y   = 8;
@@ -275,51 +282,70 @@ in
           title       = "Terminal";
         };
         font = {
-          size               = 14;
-          offset.x           = 1;
-          normal.family      = "SF Mono";
+          size               = 18;
+          # Use `Fixed` instead of `Term` as
+          # Alacritty doesn't have ligature support
+          normal.family      = "Iosevka Fixed";
           normal.style       = "Regular";
-          italic.style       = "Regular Italic";
-          bold.style         = "Bold";
-          bold_italic.style  = "Bold Italic";
+          italic.style       = "Extralight Italic";
+          bold.style         = "Extrabold";
+          bold_italic.style  = "Extrabold Italic";
         };
         draw_bold_text_with_bright_colors = false;
         mouse.hide_when_typing = true;
-        colors = {
-          name = "TokyoNight Storm";
-          primary = {
-            background = "#24283b";
-            foreground = "#c0caf5";
-          };
-          normal = {
-            black   = "#1d202f";
-            red     = "#f7768e";
-            green   = "#9ece6a";
-            yellow  = "#e0af68";
-            blue    = "#7aa2f7";
-            magenta = "#bb9af7";
-            cyan    = "#7dcfff";
-            white   = "#a9b1d6";
-          };
-          bright = {
-            black   = "#414868";
-            red     = "#f7768e";
-            green   = "#9ece6a";
-            yellow  = "#e0af68";
-            blue    = "#7aa2f7";
-            magenta = "#bb9af7";
-            cyan    = "#7dcfff";
-            white   = "#c0caf5";
-          };
-          indexed_colors = [
-            {
-              index = 16;
-              color = "#ff9e64";
-            }
-            {
-              index = 17;
-              color = "#db4b4b";
-            }
+      };
+    };
+
+    launchd = let
+      tomlFormat = pkgs.formats.toml {};
+      baseSettings = {
+        editor = {
+          auto-save = true;
+          bufferline = "multiple";
+          cursorline = true;
+          indent-guides.render = true;
+          cursor-shape.insert = "bar";
+          undercurl = true;
+        };
+      };
+      darkSettings = baseSettings // {
+        theme = "catppuccin_macchiato";
+      };
+      lightSettings = baseSettings // {
+        theme = "catppuccin_latte";
+      };
+      helixConfigs = {
+        dark = tomlFormat.generate "helix-dark.config.toml" darkSettings;
+        light = tomlFormat.generate "helix-light.config.toml" lightSettings;
+      };
+    in {
+      enable = true;
+      agents.theme-switch = {
+        enable = true;
+        config = {
+          Label = "ke.bou.dark-mode-notify";
+          KeepAlive = true;
+          ProgramArguments = [
+            #
+            # Available in Nix but only for ARM? Using manual installation.
+            #
+            "/usr/local/bin/dark-mode-notify"
+            (pkgs.writeShellScript "theme-switch.sh" ''
+              case "$DARKMODE" in
+                0)
+                  ln -sf ${pkgs.alacritty-theme}/catppuccin_latte.yaml ~/.config/alacritty/theme.yaml;
+                  # ln -sf ~/.config/helix/light.toml ~/.config/helix/config.toml;
+                  ln -sf ${helixConfigs.light} ~/.config/helix/config.toml;
+                  pkill -USR1 hx;
+                  ;;
+                1)
+                  ln -sf ${pkgs.alacritty-theme}/catppuccin_macchiato.yaml ~/.config/alacritty/theme.yaml;
+                  # ln -sf ~/.config/helix/dark.toml ~/.config/helix/config.toml;
+                  ln -sf ${helixConfigs.dark} ~/.config/helix/config.toml;
+                  pkill -USR1 hx;
+                  ;;
+              esac
+            '').outPath
           ];
         };
       };

@@ -334,13 +334,11 @@ in
               case "$DARKMODE" in
                 0)
                   ln -sf ${pkgs.alacritty-theme}/catppuccin_latte.yaml ~/.config/alacritty/theme.yaml;
-                  # ln -sf ~/.config/helix/light.toml ~/.config/helix/config.toml;
                   ln -sf ${helixConfigs.light} ~/.config/helix/config.toml;
                   pkill -USR1 hx;
                   ;;
                 1)
                   ln -sf ${pkgs.alacritty-theme}/catppuccin_macchiato.yaml ~/.config/alacritty/theme.yaml;
-                  # ln -sf ~/.config/helix/dark.toml ~/.config/helix/config.toml;
                   ln -sf ${helixConfigs.dark} ~/.config/helix/config.toml;
                   pkill -USR1 hx;
                   ;;

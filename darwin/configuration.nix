@@ -4,10 +4,10 @@ let
   san-francisco-mono = pkgs.callPackage ./san-francisco-mono.nix {};
   yabai = pkgs.yabai.overrideAttrs (o: rec {
     # WARNING: Hash must be changed as well as version. Otherwise the cache will prevent a real update.
-    version = "6.0.1";
+    version = "7.1.0";
     src = builtins.fetchTarball {
       url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-      sha256 = "08cs0h4x1ah3ipyj2dgskbpciwqfddc3ax8z176cadylr9svjrf0";
+      sha256 = "0gjlxgb2rfxryvg49nwwv01vh8d8pmni9v1873f0wv635skj9jl3";
     };
     phases = ["unpackPhase" "installPhase"];
     installPhase = ''
@@ -154,7 +154,6 @@ in
       nmap
       pastel
       ripgrep
-      rnix-lsp
       up
       # visidata
     ];
@@ -274,7 +273,7 @@ in
     programs.alacritty = {
       enable = true;
       settings = {
-        import = ["~/.config/alacritty/theme.yaml"];
+        import = ["~/.config/alacritty/theme.toml"];
         window = {
           padding.x   = 8;
           padding.y   = 8;
@@ -291,7 +290,7 @@ in
           bold.style         = "Extrabold";
           bold_italic.style  = "Extrabold Italic";
         };
-        draw_bold_text_with_bright_colors = false;
+        colors.draw_bold_text_with_bright_colors = false;
         mouse.hide_when_typing = true;
       };
     };
@@ -333,12 +332,12 @@ in
             (pkgs.writeShellScript "theme-switch.sh" ''
               case "$DARKMODE" in
                 0)
-                  ln -sf ${pkgs.alacritty-theme}/catppuccin_latte.yaml ~/.config/alacritty/theme.yaml;
+                  ln -sf ${pkgs.alacritty-theme}/catppuccin_latte.toml ~/.config/alacritty/theme.toml;
                   ln -sf ${helixConfigs.light} ~/.config/helix/config.toml;
                   pkill -USR1 hx;
                   ;;
                 1)
-                  ln -sf ${pkgs.alacritty-theme}/catppuccin_macchiato.yaml ~/.config/alacritty/theme.yaml;
+                  ln -sf ${pkgs.alacritty-theme}/catppuccin_macchiato.toml ~/.config/alacritty/theme.toml;
                   ln -sf ${helixConfigs.dark} ~/.config/helix/config.toml;
                   pkill -USR1 hx;
                   ;;

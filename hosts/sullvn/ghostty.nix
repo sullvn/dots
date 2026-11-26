@@ -38,8 +38,17 @@
       ];
       macos-icon = "xray";
       macos-titlebar-style = "hidden";
-      theme = "Gleam";
+      theme = "Terafox";
       window-colorspace = "display-p3";
+
+      background-opacity = 0.95;
+      background-blur = "macos-glass-regular";
+      background-opacity-cells = true;
+
+      window-padding-x = 6;
+      window-padding-y = 6;
+
+      mouse-hide-while-typing = true;
     };
   };
 }

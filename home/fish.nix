@@ -1,4 +1,7 @@
 {
+  # Suppress the "Last login" banner
+  home.file.".hushlogin".text = "";
+
   programs.fish = {
     enable = true;
     functions.fish_greeting = "";

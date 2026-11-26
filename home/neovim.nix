@@ -8,16 +8,10 @@
 
     nixpkgs.useGlobalPackages = true;
 
-    colorschemes.catppuccin = {
+    colorschemes.nightfox = {
       enable = true;
-      settings = {
-        transparent_background = true;
-        integrations = {
-          cmp = true;
-          mini.enabled = true;
-          treesitter = true;
-        };
-      };
+      flavor = "terafox";
+      settings.options.transparent = true;
     };
 
     extraConfigLua = ''

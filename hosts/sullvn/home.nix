@@ -3,6 +3,7 @@
   imports = [
     inputs.nixvim.homeModules.nixvim
     ../../home
+    ./aerospace.nix
     ./ghostty.nix
   ];
 

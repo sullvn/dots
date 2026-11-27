@@ -10,7 +10,7 @@
 
     colorschemes.nightfox = {
       enable = true;
-      flavor = "terafox";
+      flavor = "nordfox";
       settings.options.transparent = true;
     };
 

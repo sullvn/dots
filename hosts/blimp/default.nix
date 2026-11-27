@@ -26,7 +26,10 @@
     # Run user services (claude-rc, codex-rc) at boot and keep them alive after logout.
     linger = true;
     description = "Kevin";
-    extraGroups = [ "wheel" ];
+    extraGroups = [
+      "wheel"
+      "docker"
+    ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB3fdsGuwFp0H4cBBvLmUDxs972Si7oc/PV0fGQufpLw kevin@ipad"
       "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBL7VJFlygTWUtu2pujRnKpJyeLPYchNcfpVUL/3rA3+JOKwn7f1ZNDUhK9bvDiNy6Af2nLRjBWYNZzEn9epXLukAAAAEc3NoOg== kevin@sullvn"
@@ -42,6 +45,8 @@
     enable = true;
     extraSetFlags = [ "--operator=kevin" ];
   };
+
+  virtualisation.docker.enable = true;
 
   nix.gc.dates = "weekly";
 
